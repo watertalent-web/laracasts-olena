@@ -1,6 +1,8 @@
-<div class="w-full max-w-sm rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg overflow-hidden transition hover:shadow-xl">
-  <div class="p-6">
-    <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100">{{ $title }}</h2>
-    <p class="mt-2 text-sm leading-relaxed text-gray-500 dark:text-gray-400">{{ $description }}</p>
+<div class="card bg-neutral text-neutral-content">
+  <div class="card-body">
+    <h2 class="card-title">{{ $idea->description }}</h2>
+    <div class="justify-end card-actions">
+      <a href="/ideas/{{ $idea->id }}" class="btn btn-primary">View</a>
+    </div>
   </div>
 </div>
