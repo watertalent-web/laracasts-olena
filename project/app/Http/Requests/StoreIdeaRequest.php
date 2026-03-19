@@ -22,7 +22,7 @@ class StoreIdeaRequest extends FormRequest
     public function rules(): array
     {
         return [
-                'idea' => 'required|min:10'
+            'idea' => 'required|min:10',
         ];
     }
 

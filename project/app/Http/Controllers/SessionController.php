@@ -35,7 +35,8 @@ class SessionController extends Controller
 
         if (Auth::attempt($request->only('email', 'password'))) {
             $request->session()->regenerate();
-            return redirect('/');
+
+            return redirect('/ideas');
         }
 
         return back()->withErrors(['email' => 'Invalid credentials']);
@@ -47,6 +48,7 @@ class SessionController extends Controller
     public function destroy()
     {
         Auth::logout();
-        return redirect('/');
+
+        return redirect('/login');
     }
 }

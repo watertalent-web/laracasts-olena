@@ -6,9 +6,12 @@ use App\Http\Controllers\SessionController;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/', function () {
+    return 'Hello World';
+});
 
 Route::middleware('auth')->group(function () {
-    Route::get('/', [IdeaController::class, 'index']);
+    Route::get('/ideas', [IdeaController::class, 'index']);
     Route::get('/ideas/create', [IdeaController::class, 'create']);
     Route::post('/ideas', [IdeaController::class, 'store']);
     Route::get('/ideas/{idea}', [IdeaController::class, 'show']);
@@ -30,6 +33,7 @@ Route::delete('/logout', [SessionController::class, 'destroy']);
 Route::get('/admin', function () {
 
     Gate::authorize('view-admin');
+
     return 'Admin';
 });
 // });

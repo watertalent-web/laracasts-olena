@@ -10,7 +10,7 @@
           <a href="/ideas/{{ $idea->id }}/edit" class="btn btn-primary">Update</a>
         </div>
         <div class="justify-end card-actions">
-          <a href="/" class="btn btn-secondary">Back to ideas</a>
+          <a href="/ideas" class="btn btn-secondary">Back to ideas</a>
         </div>
       </div>
     </div>

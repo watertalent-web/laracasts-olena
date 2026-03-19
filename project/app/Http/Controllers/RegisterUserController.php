@@ -9,11 +9,13 @@ use Illuminate\Support\Facades\Hash;
 
 class RegisterUserController extends Controller
 {
-    public function create() {
+    public function create()
+    {
         return view('register.create');
     }
 
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         // validate the form
         $request->validate([
             'name' => 'required|string|max:255',
@@ -30,11 +32,11 @@ class RegisterUserController extends Controller
 
         Auth::login($user);
 
-        return redirect('/');
+        return redirect('/ideas');
     }
 
-
-    public function login() {
+    public function login()
+    {
         return view('login.create');
     }
 }
