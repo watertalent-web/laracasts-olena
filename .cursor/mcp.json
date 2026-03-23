@@ -1,0 +1,18 @@
+{
+    "mcpServers": {
+        "laravel-boost": {
+            "command": "php",
+            "args": [
+                "C:/Users/Olena/Herd/idea/artisan",
+                "boost:mcp"
+            ]
+        },
+        "herd": {
+            "command": "php",
+            "args": ["C:/Users/Olena/.config/herd/bin/herd-mcp.phar"],
+            "env": {
+                "SITE_PATH": "C:\\Users\\Olena\\Herd\\idea"
+            }
+        }
+    }
+}
