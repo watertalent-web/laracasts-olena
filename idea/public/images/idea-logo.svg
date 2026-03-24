@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Idea">
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="42%" r="35%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.45"/>
+      <stop offset="70%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" rx="120" fill="oklch(0.16 0 0)"/>
+  <circle cx="256" cy="218" r="108" fill="none" stroke="#ffffff" stroke-width="28" stroke-linecap="round"/>
+  <circle cx="256" cy="218" r="52" fill="url(#glow)"/>
+  <path fill="#ffffff" d="M256 178l14 28 31 5-22 24 5 31-28-15-28 15 5-31-22-24 31-5z"/>
+  <path fill="none" stroke="#ffffff" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"
+        d="M256 326v52M208 378h96M224 410h64"/>
+</svg>
