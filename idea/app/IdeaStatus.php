@@ -10,6 +10,14 @@ enum IdeaStatus: string
     case IN_PROGRESS = 'in_progress';
     case COMPLETED = 'completed';
 
+    /**
+     * @return list<string>
+     */
+    public static function values(): array
+    {
+        return array_column(self::cases(), 'value');
+    }
+
     public function label(): string
     {
         return match ($this) {

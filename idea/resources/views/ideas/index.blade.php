@@ -2,12 +2,16 @@
     <div class="">
         <header class="py-8 md:py-12">
             <h1 class="text-3xl font-bold">Ideas</h1>
-            <p class="text-muted-foreground text-sm mt-2">This is the ideas page</p>
+            <p class="text-muted-foreground text-sm mt-2">Capture your thoughts. Make a plan.</p>
+
+            <x-card is-button class="mt-10 cursor-pointer h-32 w-full text-left" x-data
+                x-on:click="$dispatch('open-modal', 'create-idea')" data-test="create-idea-button">
+                <p>What's on your mind?</p>
+            </x-card>
         </header>
 
         <div>
-            <a class="btn {{ request()->has('status') ? 'btn-outlined' : ' btn-primary' }}"
-                href="/ideas">
+            <a class="btn {{ request()->has('status') ? 'btn-outlined' : ' btn-primary' }}" href="/ideas">
                 All <span class="text-xs">{{ $statusCounts->get('all') }}</span>
             </a>
 
@@ -16,7 +20,8 @@
                     href="/ideas?status={{ $status->value }}">
                     {{ $status->label() }} <span class="text-xs">{{ $statusCounts->get($status->value) }}</span>
                 </a>
-            @endforeach        </div>
+            @endforeach
+        </div>
 
         <div class="mt-10 text-muted-foreground">
             <div class="grid md:grid-cols-2 gap-6">
@@ -32,5 +37,82 @@
                 @endforelse
             </div>
         </div>
+
+        <x-modal name="create-idea" title="Create Idea">
+            <form x-data="{ status: 'pending', newLink: '', links: [] }" action="{{ route('ideas.store') }}"
+                method="POST">
+                @csrf
+                <div class="space-y-6">
+
+                    <!-- Title -->
+                    <x-form.field name="title" label="Title" type="text" autofocus required
+                        placeholder="Enter a title for your idea" />
+                    <x-form.error name="title" />
+
+                    <!-- Status -->
+                    <div>
+                        <label for="status" class="label mb-2">Status</label>
+                        <div class="flex gap-x-3">
+                            @foreach (App\IdeaStatus::cases() as $status)
+                                <button @click="status = @js($status->value)" type="button" class="btn flex-1 h-10"
+                                    data-test="button-status-{{ $status->value }}"
+                                    :class="status === @js($status->value) ? '' : 'btn-outlined'">
+                                    {{ $status->label() }}
+                                </button>
+                            @endforeach
+
+                            <x-form.error name="status" />
+
+                            <input type="text" name="status" :value="status" hidden>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <x-form.field name="description" label="Description" type="textarea"
+                        placeholder="Describe your idea" />
+                    <x-form.error name="description" />
+
+                    <!-- Links -->
+                    <div>
+                        <fieldset class="space-y-3">
+                            <legend class="label">Links</legend>
+
+                            <template x-for="link in links" :key="link">
+                                <div class="flex gap-x-2 items-center">
+                                    <input data-test="new-link" class="input" name="links[]" :value="link" x-model="link">
+                                    <button
+                                     @click="links.splice(links.indexOf(link), 1)"
+                                     aria-label="Remove link" type="button"
+                                        class="flex items-center justify-center btn btn-outlined border-red-500 text-red-500 hover:text-red-600">
+                                        remove
+                                    </button>
+                                </div>
+                            </template>
+
+                            <div class="flex gap-x-2 items-center">
+                                <input x-model="newLink" id="new-link" class="input flex-1" spellcheck="false"
+                                    type="url" autocomplete="url" placeholder="http://example.com" />
+
+                                <button data-test="submit-new-link-button" type="button" class="btn btn-outlined"
+                                    @click="links.push(newLink.trim()); newLink = ''"
+                                    :disabled="newLink.trim().length === 0" aria-label="Add link">
+                                    +
+                                </button>
+                            </div>
+                            
+
+
+                        </fieldset>
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="flex justify-end gap-x-3 mt-5">
+                    <button type="button" @click="$dispatch('close-modal')" class="btn btn-outlined">Cancel</button>
+                    <button type="submit" class="btn" data-test="create-idea-submit">Create</button>
+                </div>
+
+            </form>
+        </x-modal>
     </div>
 </x-layout>

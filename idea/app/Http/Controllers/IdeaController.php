@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreIdeaRequest;
+use App\IdeaStatus;
 use App\Models\Idea;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,16 +15,21 @@ class IdeaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $ideas = Auth::user()
+        $user = Auth::user();
+
+        $ideas = $user
             ->ideas()
-            ->when(request('status'), fn ($query, $status) => $query->where('status', $status))
+            ->when(
+                in_array($request->status, IdeaStatus::values(), true),
+                fn($query) => $query->where('status', $request->status),
+            )->latest()
             ->get();
 
         return view('ideas.index', [
             'ideas' => $ideas,
-            'statusCounts' => Idea::statusCounts(Auth::user()),
+            'statusCounts' => Idea::statusCounts($user),
         ]);
     }
 
@@ -31,23 +38,27 @@ class IdeaController extends Controller
      */
     public function create(): void
     {
-        //
+        dd('create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): void
+    public function store(StoreIdeaRequest $request)
     {
-        //
+        Auth::user()->ideas()->create($request->validated());
+
+        return to_route('ideas.index')->with('success', 'Idea created successfully');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Idea $idea): void
+    public function show(Idea $idea)
     {
-        //
+        return view('components.idea.show', [
+            'idea' => $idea,
+        ]);
     }
 
     /**
@@ -69,8 +80,9 @@ class IdeaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Idea $idea): void
+    public function destroy(Idea $idea)
     {
-        //
+        $idea->delete();
+        return to_route('ideas.index');
     }
 }

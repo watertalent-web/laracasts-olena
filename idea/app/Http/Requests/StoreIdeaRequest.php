@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
+use App\IdeaStatus;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -14,7 +15,7 @@ class StoreIdeaRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,8 +25,12 @@ class StoreIdeaRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            //
-        ];
+      return [
+        'title' => 'required|string|max:255',
+        'description' => 'nullable|string|max:255',
+        'status' => 'required|string|in:' . implode(',', IdeaStatus::values()),
+        'links' => 'nullable|array',
+        'links.*' => 'url|max:255',
+      ];
     }
 }
