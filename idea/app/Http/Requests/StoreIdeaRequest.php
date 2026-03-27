@@ -31,6 +31,8 @@ class StoreIdeaRequest extends FormRequest
       'status' => 'required|string|in:' . implode(',', IdeaStatus::values()),
       'links' => 'nullable|array',
       'links.*' => 'url|max:255',
+      'steps' => 'nullable|array',
+      'steps.*' => 'string|max:255',
     ];
   }
 }

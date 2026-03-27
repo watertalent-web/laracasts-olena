@@ -39,8 +39,7 @@
         </div>
 
         <x-modal name="create-idea" title="Create Idea">
-            <form
-                x-data="{
+            <form x-data="{
                     status: 'pending',
                     newLink: '',
                     links: [],
@@ -64,10 +63,17 @@
                         this.links.push(s);
                         this.newLink = '';
                     },
-                }"
-                action="{{ route('ideas.store') }}"
-                method="POST"
-            >
+                    newStep: '',
+                    steps: [],
+                    addStep() {
+                        const s = this.newStep.trim();
+                        if (!s) {
+                            return;
+                        }
+                        this.steps.push(s);
+                        this.newStep = '';
+                    },
+                }" action="{{ route('ideas.store') }}" method="POST">
                 @csrf
                 <div class="space-y-6">
 
@@ -99,6 +105,38 @@
                         placeholder="Describe your idea" />
                     <x-form.error name="description" />
 
+                    <!-- Srteps -->
+                    <div>
+                        <fieldset class="space-y-3">
+                            <legend class="label">Steps</legend>
+
+                            <template x-for="step in steps" :key="step">
+                                <div class="flex gap-x-2 items-center">
+                                    <input data-test="new-step" class="input" name="steps[]" :value="step"
+                                        x-model="step">
+                                    <button @click="steps.splice(steps.indexOf(step), 1)" aria-label="Remove step"
+                                        type="button"
+                                        class="flex items-center justify-center btn btn-outlined border-red-500 text-red-500 hover:text-red-600">
+                                        remove
+                                    </button>
+                                </div>
+                            </template>
+
+                            <div class="space-y-2">
+                                <div class="flex gap-x-2 items-center">
+                                    <input x-model="newStep" id="new-step" class="input flex-1" spellcheck="false"
+                                        type="text" autocomplete="text" placeholder="Enter a step description"
+                                        @keydown.enter.prevent="addLink()" />
+
+                                    <button data-test="submit-new-step-button" type="button" class="btn btn-outlined"
+                                        @click="addStep()" aria-label="Add step">
+                                        +
+                                    </button>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+
                     <!-- Links -->
                     <div>
                         <fieldset class="space-y-3">
@@ -118,38 +156,19 @@
 
                             <div class="space-y-2">
                                 <div class="flex gap-x-2 items-center">
-                                    <input
-                                        x-model="newLink"
-                                        id="new-link"
-                                        class="input flex-1"
-                                        spellcheck="false"
-                                        type="url"
-                                        autocomplete="url"
-                                        placeholder="https://example.com"
-                                        @keydown.enter.prevent="addLink()"
-                                    />
+                                    <input x-model="newLink" id="new-link" class="input flex-1" spellcheck="false"
+                                        type="url" autocomplete="url" placeholder="https://example.com"
+                                        @keydown.enter.prevent="addLink()" />
 
-                                    <button
-                                        data-test="submit-new-link-button"
-                                        type="button"
-                                        class="btn btn-outlined"
-                                        @click="addLink()"
-                                        :disabled="!isValidUrl(newLink)"
-                                        aria-label="Add link"
-                                    >
+                                    <button data-test="submit-new-link-button" type="button" class="btn btn-outlined"
+                                        @click="addLink()" :disabled="!isValidUrl(newLink)" aria-label="Add link">
                                         +
                                     </button>
                                 </div>
-                                <p
-                                    x-show="newLink.trim() && !isValidUrl(newLink)"
-                                    x-cloak
-                                    class="text-sm text-red-500"
-                                >
+                                <p x-show="newLink.trim() && !isValidUrl(newLink)" x-cloak class="text-sm text-red-500">
                                     Enter a full URL starting with https:// or http://
                                 </p>
                             </div>
-
-
                         </fieldset>
                     </div>
                 </div>
