@@ -27,6 +27,12 @@
             <div class="grid md:grid-cols-2 gap-6">
                 @forelse ($ideas as $idea)
                     <x-card href="/ideas/{{ $idea->id }}">
+                        @if ($idea->image_path)
+                            <div class="rounded-lg overflow-hidden w-full aspect-video mb-4">
+                                <img src="{{ asset('storage/' . $idea->image_path) }}" alt="{{ $idea->title }}"
+                                    class="w-full h-auto object-cover">
+                            </div>
+                        @endif
                         <h3 class="text-foreground text-lg">{{ $idea->title }}</h3>
                         <x-idea.status :status="$idea->status->value">{{  $idea->status->label()  }}</x-idea.status>
                         <div class="mt-5 line-clamp-3">{{ $idea->description }}</div>
@@ -41,6 +47,7 @@
         <x-modal name="create-idea" title="Create Idea">
             <form x-data="{
                     status: 'pending',
+                    hasImageFile: false,
                     newLink: '',
                     links: [],
                     isValidUrl(str) {
@@ -73,7 +80,8 @@
                         this.steps.push(s);
                         this.newStep = '';
                     },
-                }" action="{{ route('ideas.store') }}" method="POST">
+                }" action="{{ route('ideas.store') }}" method="POST"
+                :enctype="hasImageFile ? 'multipart/form-data' : 'application/x-www-form-urlencoded'">
                 @csrf
                 <div class="space-y-6">
 
@@ -104,6 +112,14 @@
                     <x-form.field name="description" label="Description" type="textarea"
                         placeholder="Describe your idea" />
                     <x-form.error name="description" />
+
+                    <!--- File Input --->
+                    <div class="space-y-3">
+                        <label for="image" class="label">Featured Image</label>
+                        <input type="file" name="image" id="image" accept="image/*" class="file-input"
+                            @change="hasImageFile = $event.target.files.length > 0" />
+                        <x-form.error name="image" />
+                    </div>
 
                     <!-- Srteps -->
                     <div>
@@ -144,7 +160,7 @@
 
                             <template x-for="link in links" :key="link">
                                 <div class="flex gap-x-2 items-center">
-                                    <input data-test="new-link" class="input" name="links[]" :value="link"
+                                    <input data-test="link-item" class="input" name="links[]" :value="link"
                                         x-model="link">
                                     <button @click="links.splice(links.indexOf(link), 1)" aria-label="Remove link"
                                         type="button"
@@ -156,9 +172,9 @@
 
                             <div class="space-y-2">
                                 <div class="flex gap-x-2 items-center">
-                                    <input x-model="newLink" id="new-link" class="input flex-1" spellcheck="false"
-                                        type="url" autocomplete="url" placeholder="https://example.com"
-                                        @keydown.enter.prevent="addLink()" />
+                                    <input x-model="newLink" id="new-link" data-test="new-link" class="input flex-1"
+                                        spellcheck="false" type="url" autocomplete="url"
+                                        placeholder="https://example.com" @keydown.enter.prevent="addLink()" />
 
                                     <button data-test="submit-new-link-button" type="button" class="btn btn-outlined"
                                         @click="addLink()" :disabled="!isValidUrl(newLink)" aria-label="Add link">

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Actions\CreateIdea;
 use App\Http\Requests\StoreIdeaRequest;
 use App\IdeaStatus;
 use App\Models\Idea;
@@ -23,7 +24,7 @@ class IdeaController extends Controller
             ->ideas()
             ->when(
                 in_array($request->status, IdeaStatus::values(), true),
-                fn($query) => $query->where('status', $request->status),
+                fn ($query) => $query->where('status', $request->status),
             )->latest()
             ->get();
 
@@ -46,12 +47,7 @@ class IdeaController extends Controller
      */
     public function store(StoreIdeaRequest $request)
     {
-
-        $idea = Auth::user()->ideas()->create($request->safe()->except('steps'));
-
-        $idea->steps()->createMany(
-            collect($request->steps)->map(fn($step) => ['description' => $step])
-        );
+        (new CreateIdea)->handle($request->safe()->all());
 
         return to_route('ideas.index')->with('success', 'Idea created successfully');
     }
@@ -88,6 +84,7 @@ class IdeaController extends Controller
     public function destroy(Idea $idea)
     {
         $idea->delete();
+
         return to_route('ideas.index');
     }
 }

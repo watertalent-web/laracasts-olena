@@ -13,8 +13,7 @@ it('can create an idea', function () {
         ->fill('@new-link', 'https://www.linkedin.com/feed/')
         ->click('@submit-new-link-button')
         ->click('@button-status-completed')
-        ->click('Create')
-        ->debug();
+        ->click('@create-idea-submit');
 
     expect(Idea::first())->toMatchArray([
         'title' => 'Test Idea',
