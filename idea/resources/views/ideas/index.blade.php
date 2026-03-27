@@ -39,8 +39,35 @@
         </div>
 
         <x-modal name="create-idea" title="Create Idea">
-            <form x-data="{ status: 'pending', newLink: '', links: [] }" action="{{ route('ideas.store') }}"
-                method="POST">
+            <form
+                x-data="{
+                    status: 'pending',
+                    newLink: '',
+                    links: [],
+                    isValidUrl(str) {
+                        const s = (str || '').trim();
+                        if (!s) {
+                            return false;
+                        }
+                        try {
+                            const u = new URL(s);
+                            return u.protocol === 'http:' || u.protocol === 'https:';
+                        } catch (e) {
+                            return false;
+                        }
+                    },
+                    addLink() {
+                        const s = this.newLink.trim();
+                        if (!this.isValidUrl(s)) {
+                            return;
+                        }
+                        this.links.push(s);
+                        this.newLink = '';
+                    },
+                }"
+                action="{{ route('ideas.store') }}"
+                method="POST"
+            >
                 @csrf
                 <div class="space-y-6">
 
@@ -79,27 +106,48 @@
 
                             <template x-for="link in links" :key="link">
                                 <div class="flex gap-x-2 items-center">
-                                    <input data-test="new-link" class="input" name="links[]" :value="link" x-model="link">
-                                    <button
-                                     @click="links.splice(links.indexOf(link), 1)"
-                                     aria-label="Remove link" type="button"
+                                    <input data-test="new-link" class="input" name="links[]" :value="link"
+                                        x-model="link">
+                                    <button @click="links.splice(links.indexOf(link), 1)" aria-label="Remove link"
+                                        type="button"
                                         class="flex items-center justify-center btn btn-outlined border-red-500 text-red-500 hover:text-red-600">
                                         remove
                                     </button>
                                 </div>
                             </template>
 
-                            <div class="flex gap-x-2 items-center">
-                                <input x-model="newLink" id="new-link" class="input flex-1" spellcheck="false"
-                                    type="url" autocomplete="url" placeholder="http://example.com" />
+                            <div class="space-y-2">
+                                <div class="flex gap-x-2 items-center">
+                                    <input
+                                        x-model="newLink"
+                                        id="new-link"
+                                        class="input flex-1"
+                                        spellcheck="false"
+                                        type="url"
+                                        autocomplete="url"
+                                        placeholder="https://example.com"
+                                        @keydown.enter.prevent="addLink()"
+                                    />
 
-                                <button data-test="submit-new-link-button" type="button" class="btn btn-outlined"
-                                    @click="links.push(newLink.trim()); newLink = ''"
-                                    :disabled="newLink.trim().length === 0" aria-label="Add link">
-                                    +
-                                </button>
+                                    <button
+                                        data-test="submit-new-link-button"
+                                        type="button"
+                                        class="btn btn-outlined"
+                                        @click="addLink()"
+                                        :disabled="!isValidUrl(newLink)"
+                                        aria-label="Add link"
+                                    >
+                                        +
+                                    </button>
+                                </div>
+                                <p
+                                    x-show="newLink.trim() && !isValidUrl(newLink)"
+                                    x-cloak
+                                    class="text-sm text-red-500"
+                                >
+                                    Enter a full URL starting with https:// or http://
+                                </p>
                             </div>
-                            
 
 
                         </fieldset>
