@@ -9,7 +9,8 @@
                 Back to all ideas
             </a>
             <div class="space-x-3 flex items-center">
-                <div class="btn btn-outlined inline-flex items-center gap-1.5">
+                <div data-test="edit-idea-button" x-data x-on:click="$dispatch('open-modal', 'edit-idea')"
+                    class="btn btn-outlined inline-flex items-center gap-1.5">
                     <svg class="size-4 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                         stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -42,13 +43,15 @@
                 <div class="text-muted-foreground text-sm">{{ $idea->created_at->diffForHumans() }}</div>
             </div>
 
-            <x-card class="mt-6">
+            @if ($idea->description)
+                <x-card class="mt-6">
 
-                <div class="text-foreground prose prose-invert max-w-none cursor-pointer">
-                    {{ $idea->description }}
-                </div>
+                    <div class="text-foreground prose prose-invert max-w-none cursor-pointer">
+                        {{ $idea->description }}
+                    </div>
 
-            </x-card>
+                </x-card>
+            @endif
 
             @if ($idea->steps->count() > 0)
 
@@ -90,4 +93,6 @@
         </div>
 
     </div>
+
+    <x-idea.modal :idea="$idea" />
 </x-layout>

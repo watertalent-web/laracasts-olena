@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace App\Actions;
 
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Idea;
 use Illuminate\Support\Facades\DB;
 
-class CreateIdea
+class UpdateIdea
 {
-    public function handle(array $attributes, ?User $user = null): void
+    public function handle(array $attributes, Idea $idea): void
     {
-        $user ??= Auth::user();
 
         $data = collect($attributes)->only([
             'title',
@@ -21,12 +19,14 @@ class CreateIdea
             'links',
         ])->toArray();
 
-        if (isset($attributes['image']) ?? false) {
+        if (isset($attributes['image'])) {
             $data['image_path'] = $attributes['image']->store('ideas', 'public');
         }
 
-        DB::transaction(function () use ($user, $data, $attributes) {
-            $idea = $user->ideas()->create($data);
+        DB::transaction(function () use ($idea, $data, $attributes) {
+            $idea->update($data);
+
+            $idea->steps()->delete();
 
             $steps = collect($attributes['steps'] ?? [])->map(function ($step) {
                 if (is_array($step)) {

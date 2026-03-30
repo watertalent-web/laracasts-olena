@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\IdeaController;
+use App\Http\Controllers\IdeaImageController;
 use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\SessionsController;
 use App\Http\Controllers\StepController;
@@ -18,8 +19,21 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/ideas', [IdeaController::class, 'index'])->name('ideas.index');
     Route::get('/logout', [SessionsController::class, 'destroy']);
-    Route::get('/ideas/{idea}', [IdeaController::class, 'show'])->name('ideas.show');
-    Route::delete('/ideas/{idea}', [IdeaController::class, 'destroy'])->name('ideas.destroy');
-    Route::post('/ideas', [IdeaController::class, 'store'])->name('ideas.store');
-    Route::patch('/steps/{step}', [StepController::class, 'update'])->name('steps.update');
+
+    Route::get('/ideas/{idea}', [IdeaController::class, 'show'])
+        ->name('ideas.show');
+
+    Route::delete('/ideas/{idea}/image', [IdeaImageController::class, 'destroy'])->name('idea.image.destroy');
+
+    Route::delete('/ideas/{idea}', [IdeaController::class, 'destroy'])
+        ->name('ideas.destroy');
+
+    Route::post('/ideas', [IdeaController::class, 'store'])
+        ->name('ideas.store');
+
+    Route::patch('/ideas/{idea}', [IdeaController::class, 'update'])
+        ->name('ideas.update');
+
+        Route::patch('/steps/{step}', [StepController::class, 'update'])
+        ->name('steps.update');
 });
