@@ -14,6 +14,7 @@
                 <a href="{{ url('/login') }}" class="btn">Sign in</a>
             @endguest
             @auth
+                <a href="{{ url('/profile/edit') }}" class="btn">Edit profile</a>
                 <a href="{{ url('/logout') }}" class="btn">Logout</a>
             @endauth
         </div>

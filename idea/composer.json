@@ -24,7 +24,8 @@
         "pestphp/pest": "^4.4",
         "pestphp/pest-plugin-browser": "*",
         "pestphp/pest-plugin-laravel": "^4.1",
-        "rector/rector": "*"
+        "rector/rector": "*",
+        "spatie/laravel-ignition": "^2.12"
     },
     "autoload": {
         "psr-4": {

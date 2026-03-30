@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\IdeaController;
 use App\Http\Controllers\IdeaImageController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\SessionsController;
 use App\Http\Controllers\StepController;
@@ -17,6 +18,9 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
     Route::get('/ideas', [IdeaController::class, 'index'])->name('ideas.index');
     Route::get('/logout', [SessionsController::class, 'destroy']);
 
@@ -34,6 +38,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('/ideas/{idea}', [IdeaController::class, 'update'])
         ->name('ideas.update');
 
-        Route::patch('/steps/{step}', [StepController::class, 'update'])
+    Route::patch('/steps/{step}', [StepController::class, 'update'])
         ->name('steps.update');
 });
