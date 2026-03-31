@@ -28,7 +28,7 @@ class UpdateIdea
 
             $idea->steps()->delete();
 
-            $steps = collect($attributes['steps'] ?? [])->map(function ($step) {
+            $steps = collect($attributes['steps'] ?? [])->map(function ($step): array {
                 if (is_array($step)) {
                     return [
                         'description' => $step['description'] ?? '',

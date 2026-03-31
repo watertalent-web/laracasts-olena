@@ -28,7 +28,7 @@ class CreateIdea
         DB::transaction(function () use ($user, $data, $attributes) {
             $idea = $user->ideas()->create($data);
 
-            $steps = collect($attributes['steps'] ?? [])->map(function ($step) {
+            $steps = collect($attributes['steps'] ?? [])->map(function ($step): array {
                 if (is_array($step)) {
                     return [
                         'description' => $step['description'] ?? '',

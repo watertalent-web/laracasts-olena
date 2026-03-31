@@ -27,7 +27,7 @@ class IdeaController extends Controller
             ->ideas()
             ->when(
                 in_array($request->status, IdeaStatus::values(), true),
-                fn($query) => $query->where('status', $request->status),
+                fn ($query) => $query->where('status', $request->status),
             )->latest()
             ->get();
 
@@ -61,6 +61,7 @@ class IdeaController extends Controller
     public function show(Idea $idea)
     {
         Gate::authorize('workWith', $idea);
+
         return view('components.idea.show', [
             'idea' => $idea,
         ]);

@@ -30,8 +30,6 @@ it('can create an idea', function () {
     expect($idea->steps)->toHaveCount(2);
 });
 
-
-
 it('can edit an existing idea', function () {
     $this->actingAs($user = User::factory()->create());
 
@@ -39,7 +37,7 @@ it('can edit an existing idea', function () {
 
     visit(route('ideas.show', $idea))
         ->click('@edit-idea-button')
-        
+
         ->fill('title', 'Some example idea')
         ->fill('description', 'Test Description')
         ->fill('@new-link', 'https://www.linkedin.com/feed/')

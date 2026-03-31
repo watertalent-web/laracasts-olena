@@ -8,7 +8,7 @@ it('register a user', function () {
         ->fill('email', 'john@doe.com')
         ->fill('password', 'Password')
         ->click('Create Account')
-        ->assertPathIs('/');
+        ->assertPathIs('/ideas');
 
     $this->assertAuthenticated();
     $this->assertDatabaseHas('users', [

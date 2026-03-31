@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Notifications;
 
 use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -36,8 +37,13 @@ class EmailChanged extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->line('The introduction to the notification.')
-            ->action('Notification Action', url('/'))
+            ->subject('Your Email Address Has Been Changed')
+            ->greeting('Hello '.$this->user->name.',')
+            ->line('This email is to notify you that your account email address has been changed.')
+            ->line('Previous email: '.$this->originalEmail)
+            ->line('New email: '.$this->user->email)
+            ->line('If you did not make this change, please contact support immediately.')
+            ->action('View Your Profile', url('/profile/edit'))
             ->line('Thank you for using our application!');
     }
 

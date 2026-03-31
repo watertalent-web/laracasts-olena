@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Notifications\EmailChanged;
@@ -39,12 +41,16 @@ class ProfileController extends Controller
 
         $originalEmail = $user->email;
 
-        $user->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => $request->password ?? $user->password,
-        ]);
+        $data = [
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+        ];
 
+        if ($request->filled('password')) {
+            $data['password'] = $request->input('password');
+        }
+
+        $user->update($data);
 
         if ($originalEmail !== $request->email) {
             Notification::route('mail', $originalEmail)
