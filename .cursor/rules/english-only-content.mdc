@@ -1,0 +1,10 @@
+---
+description: UI copy, comments, and user-facing strings must be English only
+alwaysApply: true
+---
+
+# English-only copy and code strings
+
+- Use **English** for all user-visible UI text, empty states, placeholders, descriptions, and Storyblok-related messages in this workspace.
+- Use **English** for code comments, docstrings, and commit/PR descriptions unless the user explicitly asks for another language.
+- Do not add Russian or other non-English strings to the codebase or CMS-facing templates unless the user requests localization as a feature.

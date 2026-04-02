@@ -1,6 +1,6 @@
 <script setup lang="ts">
 defineProps<{
-  /** Заголовок секции над текстом */
+  /** Section title above the text */
   title?: string
 }>()
 </script>

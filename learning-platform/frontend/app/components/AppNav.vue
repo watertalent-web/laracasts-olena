@@ -13,7 +13,10 @@ const navItems = computed(() =>
   links.map((l) => ({
     label: l.label,
     to: l.to,
-    active: route.path === l.to
+    active:
+      l.to === '/'
+        ? route.path === '/'
+        : route.path.startsWith(l.to)
   }))
 )
 </script>

@@ -1,4 +1,4 @@
-/** Список типов контент-блоков для страниц и конструктора. */
+/** Content block types for pages and the page builder. */
 export const contentBlockTypes = [
   { id: 'hero', label: 'Hero' },
   { id: 'rich-text', label: 'Rich text' },
